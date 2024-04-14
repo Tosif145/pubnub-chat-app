@@ -11,6 +11,7 @@ import sendMessageSound from '../sounds/sendMessage.mp3'
 
 import loader from '../assets/loader.svg'
 import chevron from '../assets/chevron.svg'
+import randomMessages from '../assets/random.js' 
 
 export default function Chat() {
     const pubnub = usePubNub()
@@ -25,6 +26,9 @@ export default function Chat() {
     const [playSendMessageSound] = useSound(sendMessageSound)
     const [fetching, setFetching] = useState(false)
     const [channelsIsCollapsed, setCollapsedChannels] = useState(false)
+
+    const user_list = ["Alan", "Bob", "Carol", "Dean", "Elin"]
+
     
     const scrollingComponent = useRef(null)
     
@@ -107,30 +111,31 @@ export default function Chat() {
     const handleMessage = async (message) => {
         console.log('%cCHAT-EVENT', 'color:green')
         console.table(message)
-
+    
         if (
             typeof message.message === 'string' ||
             message.message.hasOwnProperty('text')
         ) {
-            addMessagesByChannel((prevState) => {
-              
-                   
-               
-                return [...prevState, message]
-            })
+            // Add the received message to the channel's message list
+            addMessagesByChannel((prevState) => [...prevState, message])
+    
+            // Send a random message from the user_list array
+            const randomUserName = user_list[Math.floor(Math.random() * user_list.length)];
+            const randomMessage = {
+                publisher: randomUserName,
+                message: randomMessages[Math.floor(Math.random() * randomMessages.length)] + randomUserName,
+                timetoken: Date.now() * 10000,
+            };
+            addMessagesByChannel((prevState) => [...prevState, randomMessage]);
         }
-
-        // if (
-        //     message.publisher === pubnub.getUUID() ||
-        //     message.uuid === pubnub.getUUID()
-        // ) {
-        playNotificationSound()
-        // }
+    
+        playNotificationSound();
+    
         if (currentChannel) {
-            getUsersInChannel(currentChannel)
+            getUsersInChannel(currentChannel);
         }
-    }
-
+    };
+    
     const sendMessage = (message) => {
         
         if (message) {
