@@ -18,6 +18,9 @@ This project is a real-time chat application built using React and PubNub. It al
 - **useSound:** The useSound library is utilized to play notification sounds when new messages are received or sent.
 - **CSS:** CSS is used for styling the user interface, providing a visually appealing chat experience.
 
+## Screenshot
+![UI](src/PubNubChat/assets/chat-app.png)
+
 ## Getting Started:
 
 To run the project locally, follow these steps:
